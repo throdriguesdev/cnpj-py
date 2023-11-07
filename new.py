@@ -1,47 +1,74 @@
 import requests
+import pandas as pd
+import time
 
-cnpjs = ["09464629000248", "41044009000181", "09464629000167"]
+# lista de CNPJs separados por vírgula
+cnpjs = [
+    "00191498001350",
+    "17660814000155",
+    "27826790000115",
+]
+
+# verificar se o arquivo 'dados_cnpj.xlsx' já existe
+try:
+    df = pd.read_excel("dados_cnpj.xlsx")
+except FileNotFoundError:
+    # se o arquivo não existir, criar um DataFrame vazio
+    df = pd.DataFrame()
+
+# número máximo de consultas por minuto
+consultas_por_minuto = 3
+
+# tempo de espera entre consultas (em segundos)
+tempo_espera = 60 / consultas_por_minuto
+
+# função para buscar   campos
+def buscar_campos(cnpj):
+    url = f"https://receitaws.com.br/v1/cnpj/{cnpj}"
+    headers = {"Accept": "application/json"}
+    response = requests.get(url, headers=headers)
+
+    if response.status_code == 200:
+        data = response.json()
+        return {
+            "Nome": data.get("nome"),
+            "CNPJ": cnpj,
+            "Status": data.get("status"),
+            "Tipo": data.get("tipo"),
+            "Atividade Principal - Código": data.get("atividade_principal")[0].get("code") if data.get("atividade_principal") else "N/A",
+            "Atividade Secundária - Código": data.get("atividades_secundarias")[0].get("code") if data.get("atividades_secundarias") else "N/A",
+            "Atividade Principal - Texto": data.get("atividade_principal")[0].get("text") if data.get("atividade_principal") else "N/A",
+            "Atividade Secundária - Texto": data.get("atividades_secundarias")[0].get("text") if data.get("atividades_secundarias") else "N/A",
+            "Natureza Jurídica": data.get("natureza_juridica"),
+            "Logradouro": data.get("logradouro"),
+            "Número": data.get("numero"),
+            "CEP": data.get("cep"),
+            "Bairro": data.get("bairro"),
+            "Município": data.get("municipio"),
+            "UF": data.get("uf"),
+            "Telefone": data.get("telefone"),
+            "Situação": data.get("situacao"),
+            "Capital Social": data.get("capital_social"),
+            "Última Atualização": data.get("ultima_atualizacao"),
+            "FANTASIA": data.get("fantasia")
+        }
+    return {}  # Retorna um dicionário vazio se a consulta falhar
 
 # Itera sobre a lista de CNPJs
 for cnpj in cnpjs:
-    # URL da API
-    url = f"https://receitaws.com.br/v1/cnpj/{cnpj}"
+    cnpj_data = buscar_campos(cnpj)
 
-    # Cabeçalhos necessários
-    headers = {"Accept": "application/json"}
+    if not cnpj_data:
+        continue  # Pule esta iteração se a consulta falhar
 
-    # Solicitação GET para a API
-    response = requests.get(url, headers=headers)
+    # Crie um novo DataFrame com os novos dados
+    new_df = pd.DataFrame([cnpj_data])
 
-    # Verifique se a solicitação foi bem-sucedida (código de status 200)
-    if response.status_code == 200:
-        data = response.json()
+    # Adicione os novos dados ao DataFrame existente
+    df = pd.concat([df, new_df], ignore_index=True)
 
-        # Imprima os campos desejados
-        print("Status:", data.get("status"))
-        print("Última Atualização:", data.get("ultima_atualizacao"))
-        print("CNPJ:", data.get("cnpj"))
-        print("Tipo:", data.get("tipo"))
-        print("Nome:", data.get("nome"))
-        
-        # Atividade Principal
-        atividade_principal = data.get("atividade_principal", [])[0]
-        print("Atividade Principal - Texto:", atividade_principal.get("text"))
-        print("Atividade Principal - Código:", atividade_principal.get("code"))
-        
-        # Atividades Secundárias
-        atividades_secundarias = data.get("atividades_secundarias", [])
-        for atividade in atividades_secundarias:
-            print("Atividade Secundária - Texto:", atividade.get("text"))
-            print("Atividade Secundária - Código:", atividade.get("code"))
-        
-        print("Natureza Jurídica:", data.get("natureza_juridica"))
-        print("Logradouro:", data.get("logradouro"))
-        print("Número:", data.get("numero"))
-        print("CEP:", data.get("cep"))
-        print("Bairro:", data.get("bairro"))
-        print("Município:", data.get("municipio"))
-        print("UF:", data.get("uf"))
-        print("Telefone:", data.get("telefone"))
-        print("Situacao:", data.get("situacao"))
-        print("Capital Social:", data.get("capital_social"))
+    # Salve a planilha de volta no mesmo arquivo
+    df.to_excel("dados_cnpj.xlsx", index=False)
+
+    # Espere o tempo necessário para respeitar a taxa de consultas
+    time.sleep(tempo_espera)
