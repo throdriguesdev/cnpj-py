@@ -2,27 +2,27 @@ import requests
 import pandas as pd
 import time
 
-# lista de CNPJs separados por vírgula
+# Lista de CNPJs separados por vírgula
 cnpjs = [
     "00191498001350",
     "17660814000155",
     "27826790000115",
 ]
 
-# verificar se o arquivo 'dados_cnpj.xlsx' já existe
+# Verificar se o arquivo 'dados_cnpj.xlsx' já existe
 try:
     df = pd.read_excel("dados_cnpj.xlsx")
 except FileNotFoundError:
-    # se o arquivo não existir, criar um DataFrame vazio
+    # Se o arquivo não existir, criar um DataFrame vazio
     df = pd.DataFrame()
 
-# número máximo de consultas por minuto
+# Número máximo de consultas por minuto
 consultas_por_minuto = 3
 
-# tempo de espera entre consultas (em segundos)
+# Tempo de espera entre consultas (em segundos)
 tempo_espera = 60 / consultas_por_minuto
 
-# função para buscar   campos
+# Função para buscar campos
 def buscar_campos(cnpj):
     url = f"https://receitaws.com.br/v1/cnpj/{cnpj}"
     headers = {"Accept": "application/json"}
@@ -47,6 +47,7 @@ def buscar_campos(cnpj):
             "Município": data.get("municipio"),
             "UF": data.get("uf"),
             "Telefone": data.get("telefone"),
+            "Email": data.get("email"),
             "Situação": data.get("situacao"),
             "Capital Social": data.get("capital_social"),
             "Última Atualização": data.get("ultima_atualizacao"),
