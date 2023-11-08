@@ -17,7 +17,7 @@ cnpjs = [
     # adicionar mais CNPJs aqui, até um máximo de 1000
 ]
 
-<<<<<<< HEAD
+
 # configuração da barra de progresso personalizada
 total_cnpjs = len(cnpjs)
 bar_format = '{l_bar}{bar}| [{elapsed}<{remaining}] {n_fmt}/{total_fmt} {rate_fmt}'
@@ -39,7 +39,7 @@ consultas_por_minuto = 3
 tempo_espera = 60 / consultas_por_minuto
 
 # Função para buscar campos
->>>>>>> 31c9c0b6194abda503d233b7ab39a5749172f0ac
+
 def buscar_campos(cnpj):
     try:
         url = f"https://receitaws.com.br/v1/cnpj/{cnpj}"
@@ -83,7 +83,7 @@ def buscar_campos(cnpj):
         logging.error(mensagem)
         print(mensagem)  # Mensagem de erro
 
-<<<<<<< HEAD
+
 =======
     if response.status_code == 200:
         data = response.json()
@@ -110,7 +110,7 @@ def buscar_campos(cnpj):
             "Última Atualização": data.get("ultima_atualizacao"),
             "FANTASIA": data.get("fantasia")
         }
->>>>>>> 31c9c0b6194abda503d233b7ab39a5749172f0ac
+
     return {}  # Retorna um dicionário vazio se a consulta falhar
 
 # função para formatar a mensagem de progresso
