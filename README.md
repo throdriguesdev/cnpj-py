@@ -1,31 +1,34 @@
-# CNPJ - pyth
+# Automatizando Consultas e Registros de CNPJ com Python 🐍
 
-Aplicativo que consome API da receita federal para automatizar buscas por CNPJ, e retornar dados de interesse em uma planilha.
-Programa permite armazenar diversos CNPJ para realizar a consulta, respeitando o tempo limite da api (3 por miniuto).
+## Sobre o Projeto
 
-## Pré-requisitos
+Este projeto visa automatizar a consulta e o registro de informações de CNPJ (Cadastro Nacional da Pessoa Jurídica) utilizando a linguagem Python. É uma ferramenta eficiente e organizada que consome a API disponibilizada pela Receita Federal.
 
-Antes de começar, certifique-se de ter instalado os seguintes requisitos:
+## Principais Recursos
 
-- Python 
-- Bibliotecas Python: pandas, requests, tqdm
+- **Consulta e Registro de CNPJ:** Insira CNPJs para consulta, e o sistema consumirá a API da Receita Federal para obter os dados de retorno.
 
-## Instalação
+- **Armazenamento Inteligente:** Utilizamos a biblioteca `pandas` para armazenar os dados de forma organizada em uma planilha Excel. Se a planilha não existir, o programa a cria automaticamente.
 
-1. Clone o repositório:
+- **Controle de Taxa de Consulta:** O projeto respeita o limite de consultas por minuto imposto pela API gratuita da Receita Federal, evitando erros de requisição.
 
-  
-   git clone https://github.com/throdriguesdev/cnpj-py/
-pip install pandas requests tqdm
-Adicione os CNPJs que você deseja consultar à lista cnpjs no código.
+- **Gerenciamento de Erros:** Implementamos tratamento de erros e geração de relatórios para detalhar possíveis falhas. O relatório é ativado no término do programa, com ou sem erros.
 
-Execute o script Python:
-python nome-do-seu-script.py
-O script irá consultar os CNPJs listados e salvar os dados em um arquivo Excel chamado dados_cnpj.xlsx.
+## Tecnologias Utilizadas
 
-Contribuição
-Fork o projeto.
-Crie uma nova branch com a sua feature: git checkout -b feature-nova.
-Commit suas mudanças: git commit -m 'Adicione alguma feature'.
-Push para a branch: git push origin feature-nova.
-Envie um Pull Request.
+- **Python:** A linguagem principal do projeto.
+
+- **Bibliotecas Python:** Utilizamos `pandas` para organização de dados, `requests` para solicitações HTTP, `tqdm` para barras de progresso e `logging` para gerenciamento de logs.
+
+## Como Utilizar
+
+1. Clone o repositório para sua máquina local.
+2. Instale as bibliotecas necessárias com `pip install -r requirements.txt`.
+3. Execute o programa e insira os CNPJs desejados para consulta.
+
+## Contribuições
+
+Sinta-se à vontade para contribuir, sugerir melhorias ou usar o projeto para suas próprias necessidades. Basta fazer um fork do repositório, criar um branch para suas modificações e enviar um pull request.
+
+
+
