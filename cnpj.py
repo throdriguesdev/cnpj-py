@@ -3,18 +3,13 @@ import pandas as pd
 import time
 from tqdm import tqdm
 import logging
-
-<<<<<<< HEAD
-# inicializar DataFrame
+# inicializa DataFrame
 df = pd.DataFrame()
 arquivo_progresso = "progresso.txt"
 consultas_por_minuto = 3
 tempo_espera = 60 / consultas_por_minuto
 
 # lista de CNPJs separados por vírgula (máximo de 1000 CNPJs)
-=======
-# Lista de CNPJs separados por vírgula
->>>>>>> 31c9c0b6194abda503d233b7ab39a5749172f0ac
 cnpjs = [
     "00191498001350",
     "17660814000155",
