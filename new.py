@@ -4,26 +4,26 @@ import time
 from tqdm import tqdm
 import logging
 
-# Inicialize o DataFrame
+# inicializar DataFrame
 df = pd.DataFrame()
 arquivo_progresso = "progresso.txt"
 consultas_por_minuto = 3
 tempo_espera = 60 / consultas_por_minuto
 
-# Lista de CNPJs separados por vírgula (máximo de 1000 CNPJs)
+# lista de CNPJs separados por vírgula (máximo de 1000 CNPJs)
 cnpjs = [
     "00191498001350",
     "17660814000155",
     "27826790000115",
-    # Adicione mais CNPJs aqui, até um máximo de 1000
+    # adicionar mais CNPJs aqui, até um máximo de 1000
 ]
 
-# Configuração da barra de progresso personalizada
+# configuração da barra de progresso personalizada
 total_cnpjs = len(cnpjs)
 bar_format = '{l_bar}{bar}| [{elapsed}<{remaining}] {n_fmt}/{total_fmt} {rate_fmt}'
 barra_progresso = tqdm(total=total_cnpjs, unit="CNPJ", ncols=100, bar_format=bar_format)
 
-# Função para buscar campos
+# função para buscar campos
 def buscar_campos(cnpj):
     try:
         url = f"https://receitaws.com.br/v1/cnpj/{cnpj}"
@@ -69,11 +69,11 @@ def buscar_campos(cnpj):
 
     return {}  # Retorna um dicionário vazio se a consulta falhar
 
-# Função para formatar a mensagem de progresso
+# função para formatar a mensagem de progresso
 def formatar_mensagem_progresso(cnpj):
     return f"Consultando CNPJ {cnpj}..."
 
-# Itera sobre a lista de CNPJs
+# itera sobre a lista de CNPJs
 for cnpj in cnpjs:
     try:
         mensagem_progresso = formatar_mensagem_progresso(cnpj)
@@ -83,30 +83,19 @@ for cnpj in cnpjs:
 
         if not cnpj_data:
             logging.warning(f"Falha ao obter dados para CNPJ {cnpj}. Pulando esta iteração.")
-            print("Pulado.")  # Mensagem de progresso
-            continue  # Pule esta iteração se a consulta falhar
+            print("Pulado.")  # mensagem de progresso
+            continue  # pule esta iteração se a consulta falhar
 
-        # Crie um novo DataFrame com os novos dados
+        # DataFrame com os novos dados
         new_df = pd.DataFrame([cnpj_data])
-
-        # Adicione os novos dados ao DataFrame existente
         df = pd.concat([df, new_df], ignore_index=True)
-
-        # Salve a planilha de volta no mesmo arquivo
         df.to_excel("dados_cnpj.xlsx", index=False)
-
-        # Atualize a barra de progresso
         barra_progresso.update(1)
-
         print("Salvo.")  # Mensagem de progresso
-
-        # Espere o tempo necessário para respeitar a taxa de consultas
+        # taxa de consultas
         time.sleep(tempo_espera)
     except Exception as e:
         logging.error(f"Erro inesperado ao processar o CNPJ {cnpj}: {str(e)}")
-
-# Finalize a barra de progresso
 barra_progresso.close()
-
-# Informe que os dados foram salvos com sucesso
+# dados foram salvos com sucesso
 print(f"Dados salvos com sucesso para {len(cnpjs)} CNPJs.")
