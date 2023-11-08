@@ -4,6 +4,7 @@ import time
 from tqdm import tqdm
 import logging
 
+<<<<<<< HEAD
 # inicializar DataFrame
 df = pd.DataFrame()
 arquivo_progresso = "progresso.txt"
@@ -11,6 +12,9 @@ consultas_por_minuto = 3
 tempo_espera = 60 / consultas_por_minuto
 
 # lista de CNPJs separados por vírgula (máximo de 1000 CNPJs)
+=======
+# Lista de CNPJs separados por vírgula
+>>>>>>> 31c9c0b6194abda503d233b7ab39a5749172f0ac
 cnpjs = [
     "00191498001350",
     "17660814000155",
@@ -18,12 +22,29 @@ cnpjs = [
     # adicionar mais CNPJs aqui, até um máximo de 1000
 ]
 
+<<<<<<< HEAD
 # configuração da barra de progresso personalizada
 total_cnpjs = len(cnpjs)
 bar_format = '{l_bar}{bar}| [{elapsed}<{remaining}] {n_fmt}/{total_fmt} {rate_fmt}'
 barra_progresso = tqdm(total=total_cnpjs, unit="CNPJ", ncols=100, bar_format=bar_format)
 
 # função para buscar campos
+=======
+# Verificar se o arquivo 'dados_cnpj.xlsx' já existe
+try:
+    df = pd.read_excel("dados_cnpj.xlsx")
+except FileNotFoundError:
+    # Se o arquivo não existir, criar um DataFrame vazio
+    df = pd.DataFrame()
+
+# Número máximo de consultas por minuto
+consultas_por_minuto = 3
+
+# Tempo de espera entre consultas (em segundos)
+tempo_espera = 60 / consultas_por_minuto
+
+# Função para buscar campos
+>>>>>>> 31c9c0b6194abda503d233b7ab39a5749172f0ac
 def buscar_campos(cnpj):
     try:
         url = f"https://receitaws.com.br/v1/cnpj/{cnpj}"
@@ -67,6 +88,34 @@ def buscar_campos(cnpj):
         logging.error(mensagem)
         print(mensagem)  # Mensagem de erro
 
+<<<<<<< HEAD
+=======
+    if response.status_code == 200:
+        data = response.json()
+        return {
+            "Nome": data.get("nome"),
+            "CNPJ": cnpj,
+            "Status": data.get("status"),
+            "Tipo": data.get("tipo"),
+            "Atividade Principal - Código": data.get("atividade_principal")[0].get("code") if data.get("atividade_principal") else "N/A",
+            "Atividade Secundária - Código": data.get("atividades_secundarias")[0].get("code") if data.get("atividades_secundarias") else "N/A",
+            "Atividade Principal - Texto": data.get("atividade_principal")[0].get("text") if data.get("atividade_principal") else "N/A",
+            "Atividade Secundária - Texto": data.get("atividades_secundarias")[0].get("text") if data.get("atividades_secundarias") else "N/A",
+            "Natureza Jurídica": data.get("natureza_juridica"),
+            "Logradouro": data.get("logradouro"),
+            "Número": data.get("numero"),
+            "CEP": data.get("cep"),
+            "Bairro": data.get("bairro"),
+            "Município": data.get("municipio"),
+            "UF": data.get("uf"),
+            "Telefone": data.get("telefone"),
+            "Email": data.get("email"),
+            "Situação": data.get("situacao"),
+            "Capital Social": data.get("capital_social"),
+            "Última Atualização": data.get("ultima_atualizacao"),
+            "FANTASIA": data.get("fantasia")
+        }
+>>>>>>> 31c9c0b6194abda503d233b7ab39a5749172f0ac
     return {}  # Retorna um dicionário vazio se a consulta falhar
 
 # função para formatar a mensagem de progresso
